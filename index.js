@@ -5,8 +5,11 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+
 //Allow Cross Domain Requests
 // io.set('transports', [ 'websocket' ]);
+
+app.use(express.static("public"));
 
 app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/index.html');
