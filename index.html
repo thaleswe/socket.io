@@ -76,7 +76,7 @@
             "transports": ["websocket"]
         };
 
-        var socket = io("./socket/socket.io.js", connectionOptions);
+        var socket = io();
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
