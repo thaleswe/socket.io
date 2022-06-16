@@ -6,7 +6,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 //Allow Cross Domain Requests
-io.set('transports', [ 'websocket' ]);
+// io.set('transports', [ 'websocket' ]);
 
 app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/index.html');
