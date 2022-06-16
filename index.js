@@ -13,6 +13,11 @@ app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/index.html');
 });
 
+app.post('/logs', (request, response) => {
+  const { logs } = request.body; 
+  io.emit('chat message', logs);
+})
+
 io.on("connection", (socket) => {
     console.log("a user connected")
 
