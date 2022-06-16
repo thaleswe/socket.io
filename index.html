@@ -76,7 +76,7 @@
             "transports": ["websocket"]
         };
 
-        var socket = io("https://socket-io-234.herokuapp.com/", connectionOptions);
+        var socket = io("./socket/socket.io.js", connectionOptions);
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
