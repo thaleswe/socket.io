@@ -67,7 +67,7 @@
         <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
-    <script src="node_modules/socket.io/client-dist/socket.io.js"></script> <!--/socket.io/socket.io.js-->
+    <script src="socket/socket.io.js"></script> <!--/socket.io/socket.io.js-->
     <script>
         var connectionOptions = {
             "force new connection": true,
@@ -76,7 +76,7 @@
             "transports": ["websocket"]
         };
 
-        var socket = io("https://socket-io-234.herokuapp.com/", connectionOptions);
+        var socket = io();
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
