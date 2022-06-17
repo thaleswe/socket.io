@@ -1,24 +1,31 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+const bodyParser = require('body-parser');
+const path = require('path');
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use(express.static(path.join(__dirname,'public')));
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/logs', (request, response) => {
-  const { logs } = request.body; 
-  io.emit('chat message', logs);
-})
+app.post('/logs', bodyParser.raw({type: "*/*"}),(request, response) => {
+  const logs = (request.body).toString();
+
+  console.log("chegou");
+  console.log(logs)
+});
 
 io.on("connection", (socket) => {
     console.log("a user connected")
