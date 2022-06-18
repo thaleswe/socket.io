@@ -19,9 +19,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/logs', bodyParser.raw({type: "*/*"}),(request, response) => {
-  const logs = (request.body).toString();
+  const jsonString_data = (request.body).toString();
+  const pageData = JSON.parse(jsonString_data);
 
-  io.emit('chat message', logs);
+  io.emit('chat message', pageData.logs);
 });
 
 io.on("connection", (socket) => {
