@@ -21,10 +21,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/logs', bodyParser.raw({type: "*/*"}),(request, response) => {
-  const logs = (request.body).toString();
+  const jsonString_data = (request.body).toString();
+  const pageData = JSON.parse(jsonString_data);
 
-  console.log("chegou");
-  console.log(logs)
+  io.emit('chat message', pageData.logs);
+
+  console.log(pageData);
 });
 
 io.on("connection", (socket) => {
