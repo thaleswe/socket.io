@@ -85,7 +85,7 @@
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (input.value) {
-                socket.emit('chat message', input.value);
+                socket.emit('command browser', input.value);
                 input.value = '';
             }
         });
@@ -96,6 +96,84 @@
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
+
+        socket.on('reveal chip', (data) => {
+            const { chip, tab } = data;
+            const chipRevealed = document.getElementById(`_${chip.id}`);
+            const tabRevealed = document.querySelector(`details#_${chip.id} details#_${tab.id}`)
+
+            if(tabRevealed) {
+                chipRevealed.removeChild(tabRevealed);
+            }
+
+            if(chipRevealed) {
+                const StringNodeTabReveal = `
+                    <details id="_${tab.id}">
+                        <summary>${tab.name}</summary>
+                        <p>
+                            <h5>Id:</h5> 
+                            <span>${tab.id}</span>
+                        </p>
+                        <p>
+                            <h5>Url:</h5> 
+                            <span>${tab.url}</span>
+                        </p>
+                        <p>
+                            <h5>Name:</h5> 
+                            <span>${tab.name}</span>
+                        </p>
+                        <p>
+                            <h5>Connected at:</h5> 
+                            <span>${new Date(tab.connected_at).toGMTString()}</span>
+                        </p>
+                    </details>
+                `;
+            
+                return chipRevealed.innerHTML += StringNodeTabReveal;
+            } 
+
+            messages.innerHTML += `
+                <details id="_${chip.id}">
+                    <summary>${chip.name}</summary>
+                    <details id="_${tab.id}">
+                        <summary>${tab.name}</summary>
+                        <p>
+                            <h5>Id:</h5> 
+                            <span>${tab.id}</span>
+                        </p>
+                        <p>
+                            <h5>Url:</h5> 
+                            <span>${tab.url}</span>
+                        </p>
+                        <p>
+                            <h5>Name:</h5> 
+                            <span>${tab.name}</span>
+                        </p>
+                        <p>
+                            <h5>Connected at:</h5> 
+                            <span>${new Date(tab.connected_at).toGMTString()}</span>
+                        </p>
+                    </details>
+                </details>
+            `;
+        });
+
+        socket.on("disconnect chip", data => {
+            const { chip, socket_id } = data;
+            const chipRevealed = document.getElementById(`_${chip.id}`);
+            const tab = document.querySelector(`details#_${chip.id} details#_${socket_id}`);
+
+
+            if(tab) {
+                chipRevealed.removeChild(tab);
+            }
+
+            if(chipRevealed.childNodes.length === 0) {
+                messages.removeChild(chipRevealed);
+            }
+
+
+        })
     </script>
 </body>
 

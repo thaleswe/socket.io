@@ -28,13 +28,24 @@ app.post('/logs', bodyParser.raw({type: "*/*"}),(request, response) => {
 io.on("connection", (socket) => {
     console.log("a user connected")
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
+    socket.on('chat message', (msg) => {
+      io.emit('chat message', msg);
     });
 
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
+    socket.on('command browser', (command) => {
+      io.emit('command browser', command);
+    });
+
+    socket.on("chip connection", (data) => {
+      console.log(data);
+      io.emit("reveal chip", data);
+
+      socket.on('disconnect', () => {
+        console.log('user disconnected', socket.id);
+        
+        io.emit("disconnect chip", {chip: data.chip, socket_id: socket.id})
       });
+    });
 });
 
 
