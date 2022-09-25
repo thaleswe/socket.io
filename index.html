@@ -76,7 +76,7 @@
             "transports": ["websocket"]
         };
 
-        var socket = io("https://virtualchip.herokuapp.com");
+        var socket = io("https://virtualchip.herokuapp.com", connectionOptions);
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
