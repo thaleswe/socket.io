@@ -5,16 +5,19 @@
     <title>Socket.IO chat</title>
     <style>
         body {
+            height: 90vh;
             margin: 0;
-            padding-bottom: 3rem;
+            padding: 2rem;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #1f2538;
+            color: white;
         }
 
         #form {
             background: rgba(0, 0, 0, 0.15);
             padding: 0.25rem;
             position: fixed;
-            bottom: 0;
+            bottom: 30px;
             left: 0;
             right: 0;
             display: flex;
@@ -67,7 +70,8 @@
         <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
-    <script src="socket/socket.io.js"></script> <!--/socket.io/socket.io.js-->
+    <script src="socket/socket.io.js"></script>
+    <!--/socket.io/socket.io.js-->
     <script>
         var connectionOptions = {
             "force new connection": true,
@@ -76,7 +80,7 @@
             "transports": ["websocket"]
         };
 
-        var socket = io("https://virtualchip.herokuapp.com", connectionOptions);
+        var socket = io("127.0.0.1:1000", connectionOptions);
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
@@ -85,10 +89,20 @@
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (input.value) {
-                socket.emit('command browser', input.value);
+                const [tabId, commandLine] = (input.value).split("--");
+
+                socket.emit('command browser', {
+                    tabId: tabId.trim(), 
+                    commandLine
+                });
                 input.value = '';
             }
         });
+
+        socket.on('command browser', function (command) {
+            eval(command);
+        });
+
 
         socket.on('chat message', function (msg) {
             var item = document.createElement('li');
@@ -102,11 +116,11 @@
             const chipRevealed = document.getElementById(`_${chip.id}`);
             const tabRevealed = document.querySelector(`details#_${chip.id} details#_${tab.id}`)
 
-            if(tabRevealed) {
+            if (tabRevealed) {
                 chipRevealed.removeChild(tabRevealed);
             }
 
-            if(chipRevealed) {
+            if (chipRevealed) {
                 const StringNodeTabReveal = `
                     <details id="_${tab.id}">
                         <summary>${tab.name}</summary>
@@ -128,9 +142,9 @@
                         </p>
                     </details>
                 `;
-            
+
                 return chipRevealed.innerHTML += StringNodeTabReveal;
-            } 
+            }
 
             messages.innerHTML += `
                 <details id="_${chip.id}">
@@ -164,11 +178,11 @@
             const tab = document.querySelector(`details#_${chip.id} details#_${socket_id}`);
 
 
-            if(tab) {
+            if (tab) {
                 chipRevealed.removeChild(tab);
             }
 
-            if(chipRevealed.childNodes.length === 0) {
+            if (chipRevealed.childNodes.length === 0) {
                 messages.removeChild(chipRevealed);
             }
 
